@@ -1,0 +1,30 @@
+<!-- Componente de Confirmação de Exclusão -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmação de Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir este item?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a href="#" class="btn btn-danger" id="confirmDeleteButton">Excluir</a>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function confirmarExclusao(destino) {
+        var confirmModal = document.getElementById('confirmModal');
+        var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+
+        confirmDeleteButton.setAttribute('href', destino);
+
+        var bootstrapModal = new bootstrap.Modal(confirmModal);
+        bootstrapModal.show();
+    }
+</script>
+</div>

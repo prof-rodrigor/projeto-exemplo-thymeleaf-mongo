@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Novo Projeto</title>
+</head>
+<body>
+<section>
+    <h2 class="mt-5">Novo Projeto</h2>
+    <form action="/projetos" method="post">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="nome" name="nome" required>
+        </div>
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="dataInicio" class="form-label">Data de Início</label>
+            <input type="date" class="form-control" id="dataInicio" name="dataInicio" required>
+        </div>
+        <div class="mb-3">
+            <label for="dataEncerramento" class="form-label">Data de Encerramento</label>
+            <input type="date" class="form-control" id="dataEncerramento" name="dataEncerramento" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="/projetos" class="btn btn-secondary">Cancelar</a>
+    </form>
+</section>
+</body>
+</html>
