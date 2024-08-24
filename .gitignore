@@ -63,3 +63,5 @@ local.properties
 # Typically, this file would be tracked if it contains build/dependency configurations:
 #.project
 /logs/app.log
+
+**/application.properties
