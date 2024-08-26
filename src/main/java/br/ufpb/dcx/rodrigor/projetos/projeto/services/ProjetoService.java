@@ -1,7 +1,7 @@
 package br.ufpb.dcx.rodrigor.projetos.projeto.services;
 
 import br.ufpb.dcx.rodrigor.projetos.AbstractService;
-import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
+import br.ufpb.dcx.rodrigor.projetos.db.MongoDBRepository;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.Participante;
 import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
 import br.ufpb.dcx.rodrigor.projetos.projeto.model.Projeto;
@@ -25,10 +25,10 @@ public class ProjetoService extends AbstractService {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public ProjetoService(MongoDBConnector mongoDBConnector, ParticipanteService participanteService) {
-        super(mongoDBConnector);
+    public ProjetoService(MongoDBRepository mongoDBRepository, ParticipanteService participanteService) {
+        super(mongoDBRepository);
         this.participanteService = participanteService;
-        MongoDatabase database = mongoDBConnector.getDatabase("projetos");
+        MongoDatabase database = mongoDBRepository.getDatabase("projetos");
         this.collection = database.getCollection("projetos");
     }
 

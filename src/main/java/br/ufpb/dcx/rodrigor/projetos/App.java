@@ -1,6 +1,6 @@
 package br.ufpb.dcx.rodrigor.projetos;
 
-import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
+import br.ufpb.dcx.rodrigor.projetos.db.MongoDBRepository;
 import br.ufpb.dcx.rodrigor.projetos.login.LoginController;
 import br.ufpb.dcx.rodrigor.projetos.participante.controllers.ParticipanteController;
 import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
@@ -24,11 +24,14 @@ public class App {
     private static final Logger logger = LogManager.getLogger();
 
     private static final int PORTA_PADRAO = 8000;
+
+    //Propriedades do application.properties:
     private static final String PROP_PORTA_SERVIDOR = "porta.servidor";
     private static final String PROP_MONGODB_CONNECTION_STRING = "mongodb.connectionString";
 
+
     private final Properties propriedades;
-    private MongoDBConnector mongoDBConnector = null;
+    private MongoDBRepository mongoDBRepository = null;
 
     public App() {
         this.propriedades = carregarPropriedades();
@@ -45,11 +48,7 @@ public class App {
             ctx.status(500);
         });
     }
-    private void registrarServicos(JavalinConfig config, MongoDBConnector mongoDBConnector) {
-        ParticipanteService participanteService = new ParticipanteService(mongoDBConnector);
-        config.appData(Keys.PROJETO_SERVICE.key(), new ProjetoService(mongoDBConnector, participanteService));
-        config.appData(Keys.PARTICIPANTE_SERVICE.key(), participanteService);
-    }
+
     private void configurarPaginasDeErro(Javalin app) {
         app.error(404, ctx -> ctx.render("erro_404.html"));
         app.error(500, ctx -> ctx.render("erro_500.html"));
@@ -70,15 +69,15 @@ public class App {
 
         config.events(event -> {
             event.serverStarting(() -> {
-                mongoDBConnector = inicializarMongoDB();
-                config.appData(Keys.MONGO_DB.key(), mongoDBConnector);
-                registrarServicos(config, mongoDBConnector);
+                mongoDBRepository = inicializarMongoDB();
+                config.appData(Keys.MONGO_DB.key(), mongoDBRepository);
+                registrarServicos(config, mongoDBRepository);
             });
             event.serverStopping(() -> {
-                if (mongoDBConnector == null) {
+                if (mongoDBRepository == null) {
                     logger.error("MongoDBConnector não deveria ser nulo ao parar o servidor");
                 } else {
-                    mongoDBConnector.close();
+                    mongoDBRepository.close();
                     logger.info("Conexão com o MongoDB encerrada com sucesso");
                 }
             });
@@ -90,6 +89,13 @@ public class App {
         config.fileRenderer(new JavalinThymeleaf(templateEngine));
 
     }
+
+    private void registrarServicos(JavalinConfig config, MongoDBRepository mongoDBRepository) {
+        ParticipanteService participanteService = new ParticipanteService(mongoDBRepository);
+        config.appData(Keys.PROJETO_SERVICE.key(), new ProjetoService(mongoDBRepository, participanteService));
+        config.appData(Keys.PARTICIPANTE_SERVICE.key(), participanteService);
+    }
+
 
     private int obterPortaServidor() {
         if (propriedades.containsKey(PROP_PORTA_SERVIDOR)) {
@@ -117,7 +123,7 @@ public class App {
         return templateEngine;
     }
 
-    private MongoDBConnector inicializarMongoDB() {
+    private MongoDBRepository inicializarMongoDB() {
         String connectionString = propriedades.getProperty(PROP_MONGODB_CONNECTION_STRING);
         logger.info("Lendo string de conexão ao MongoDB a partir do application.properties");
         if (connectionString == null) {
@@ -127,7 +133,7 @@ public class App {
         }
 
         logger.info("Conectando ao MongoDB");
-        MongoDBConnector db = new MongoDBConnector(connectionString);
+        MongoDBRepository db = new MongoDBRepository(connectionString);
         if (db.conectado("config")) {
             logger.info("Conexão com o MongoDB estabelecida com sucesso");
         } else {

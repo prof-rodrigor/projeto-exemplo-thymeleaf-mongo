@@ -1,16 +1,16 @@
 package br.ufpb.dcx.rodrigor.projetos;
 
-import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
+import br.ufpb.dcx.rodrigor.projetos.db.MongoDBRepository;
 
 public class AbstractService {
 
-    protected final MongoDBConnector mongoDBConnector;
+    protected final MongoDBRepository mongoDBRepository;
 
-    public AbstractService(MongoDBConnector mongoDBConnector) {
-        this.mongoDBConnector = mongoDBConnector;
+    public AbstractService(MongoDBRepository mongoDBRepository) {
+        this.mongoDBRepository = mongoDBRepository;
     }
 
-    public MongoDBConnector getMongoDBConnector() {
-        return mongoDBConnector;
+    public MongoDBRepository getMongoDBConnector() {
+        return mongoDBRepository;
     }
 }

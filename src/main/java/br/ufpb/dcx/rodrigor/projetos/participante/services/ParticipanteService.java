@@ -1,7 +1,7 @@
 package br.ufpb.dcx.rodrigor.projetos.participante.services;
 
 import br.ufpb.dcx.rodrigor.projetos.AbstractService;
-import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
+import br.ufpb.dcx.rodrigor.projetos.db.MongoDBRepository;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.CategoriaParticipante;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.Participante;
 import com.mongodb.client.MongoCollection;
@@ -19,9 +19,9 @@ public class ParticipanteService extends AbstractService {
 
     private final MongoCollection<Document> collection;
 
-    public ParticipanteService(MongoDBConnector mongoDBConnector) {
-        super(mongoDBConnector);
-        MongoDatabase database = mongoDBConnector.getDatabase("projetos");
+    public ParticipanteService(MongoDBRepository mongoDBRepository) {
+        super(mongoDBRepository);
+        MongoDatabase database = mongoDBRepository.getDatabase("projetos");
         this.collection = database.getCollection("participantes");
     }
 

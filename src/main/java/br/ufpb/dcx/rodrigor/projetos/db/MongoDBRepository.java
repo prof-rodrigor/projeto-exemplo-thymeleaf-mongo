@@ -7,12 +7,12 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import org.apache.logging.log4j.LogManager;
 
-public class MongoDBConnector {
+public class MongoDBRepository {
 
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(MongoDBConnector.class);
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(MongoDBRepository.class);
     private final MongoClient mongoClient;
 
-    public MongoDBConnector(String connectionString) {
+    public MongoDBRepository(String connectionString) {
         this.mongoClient = MongoClients.create(connectionString);
     }
 
