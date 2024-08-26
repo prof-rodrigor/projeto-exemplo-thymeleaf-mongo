@@ -16,6 +16,15 @@
             <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
         </div>
         <div class="mb-3">
+            <label for="coordenador" class="form-label">Coordenador</label>
+            <select class="form-select" id="coordenador" name="coordenador" required>
+                <option value="">Selecione um coordenador</option>
+                <th:block th:each="professor : ${professores}">
+                    <option th:value="${professor.id}" th:text="${professor.nome}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="mb-3">
             <label for="dataInicio" class="form-label">Data de Início</label>
             <input type="date" class="form-control" id="dataInicio" name="dataInicio" required>
         </div>

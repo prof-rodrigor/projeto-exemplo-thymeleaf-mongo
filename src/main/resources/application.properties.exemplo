@@ -1,0 +1,4 @@
+# sua connection string:
+mongodb.connectionString=
+
+porta.servidor=8000

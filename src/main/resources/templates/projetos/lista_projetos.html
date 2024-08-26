@@ -11,9 +11,9 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>ID</th>
             <th>Nome</th>
             <th>Descrição</th>
+            <th>Coordenador</th>
             <th>Data de Início</th>
             <th>Data de Encerramento</th>
             <th>Ações</th>
@@ -22,14 +22,15 @@
         <tbody>
         <th:block th:each="projeto : ${projetos}">
             <tr>
-                <td th:text="${projeto.id}">1</td>
                 <td th:text="${projeto.nome}">Nome do Projeto</td>
                 <td th:text="${projeto.descricao}">Descrição do Projeto</td>
-                <td th:text="${projeto.dataInicio}">01/01/2023</td>
+                <td>
+                    <span th:if="${projeto.coordenador != null}" th:text="${projeto.coordenador.nome}"></span>
+                    <span th:if="${projeto.coordenador == null}" style="font-weight: bold;">Sem coordenador</span>
+                </td>                <td th:text="${projeto.dataInicio}">01/01/2023</td>
                 <td th:text="${projeto.dataEncerramento}">31/12/2023</td>
                 <td>
-                    <button class="btn btn-danger btn-sm"
-                            th:onclick="'confirmarExclusao(\'/projetos/' + ${projeto.id} + '/remover\')'">
+                    <button class="btn btn-danger btn-sm" th:data-id="${projeto.id}" onclick="removerProjeto(this)">
                         Remover
                     </button>
                 </td>
@@ -37,9 +38,14 @@
         </th:block>
         </tbody>
     </table>
-    <!-- Inclui o Componente de Confirmação de Exclusão -->
-    <div th:replace="~{componentes/confirmacao_exclusao}"></div>
+    <script>
+        function removerProjeto(button) {
+            const id = button.getAttribute('data-id');
+            window.location.href = `/projetos/${id}/remover`;
+        }
+    </script>
 </section>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

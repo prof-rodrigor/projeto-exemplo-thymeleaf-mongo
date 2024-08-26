@@ -1,18 +1,19 @@
 package br.ufpb.dcx.rodrigor.projetos.projeto.model;
 
-import br.ufpb.dcx.rodrigor.projetos.coordenador.model.Coordenador;
+import br.ufpb.dcx.rodrigor.projetos.participante.model.CategoriaParticipante;
+import br.ufpb.dcx.rodrigor.projetos.participante.model.Participante;
 
 import java.time.LocalDate;
 
 public class Projeto {
-    private Long id;
+    private String id;
     private String nome;
     private String descricao;
-    private Coordenador coordenador;
+    private Participante coordenador;
     private LocalDate dataInicio;
     private LocalDate dataEncerramento;
 
-    public Projeto(Long id, String nome, String descricao, Coordenador coordenador, LocalDate dataInicio, LocalDate dataEncerramento) {
+    public Projeto(String id, String nome, String descricao, Participante coordenador, LocalDate dataInicio, LocalDate dataEncerramento) {
         this.id = id;
         this.nome = nome;
         this.coordenador = coordenador;
@@ -24,11 +25,11 @@ public class Projeto {
     public Projeto() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -36,11 +37,14 @@ public class Projeto {
         return nome;
     }
 
-    public Coordenador getCoordenador() {
+    public Participante getCoordenador() {
         return coordenador;
     }
 
-    public void setCoordenador(Coordenador coordenador) {
+    public void setCoordenador(Participante coordenador) {
+        if(!coordenador.getCategoria().equals(CategoriaParticipante.PROFESSOR)) {
+            throw new IllegalArgumentException("O coordenador deve ser um professor: "+coordenador);
+        }
         this.coordenador = coordenador;
     }
 

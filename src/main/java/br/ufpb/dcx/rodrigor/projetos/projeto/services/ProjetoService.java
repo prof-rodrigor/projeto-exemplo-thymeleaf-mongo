@@ -1,44 +1,102 @@
 package br.ufpb.dcx.rodrigor.projetos.projeto.services;
 
-import br.ufpb.dcx.rodrigor.projetos.coordenador.service.CoordenadorService;
+import br.ufpb.dcx.rodrigor.meu_projeto.AbstractService;
+import br.ufpb.dcx.rodrigor.meu_projeto.db.MongoDBConnector;
+import br.ufpb.dcx.rodrigor.projetos.participante.model.Participante;
+import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
 import br.ufpb.dcx.rodrigor.projetos.projeto.model.Projeto;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProjetoService {
-    private List<Projeto> projetos = new ArrayList<>();
-    private Long ultimoId = 1L;
+import static com.mongodb.client.model.Filters.eq;
 
-    private CoordenadorService coordenadorService = new CoordenadorService();
+public class ProjetoService extends AbstractService {
 
-    public ProjetoService() {
-        // Adicionando alguns projetos de exemplo
-        Projeto p1 = new Projeto(ultimoId++, "Projeto Exemplo 1", "Descrição do projeto 1", coordenadorService.getCoordenador("234233"), LocalDate.now(), LocalDate.now().plusMonths(6));
-        projetos.add(p1);
-        projetos.add(new Projeto(ultimoId++, "Projeto Exemplo 2", "Descrição do projeto 2",coordenadorService.getCoordenador("233322"),  LocalDate.now().minusMonths(2), LocalDate.now().plusMonths(4)));
+    private final MongoCollection<Document> collection;
+    private final ParticipanteService participanteService;
+
+    private static final Logger logger = LogManager.getLogger();
+
+    public ProjetoService(MongoDBConnector mongoDBConnector, ParticipanteService participanteService) {
+        super(mongoDBConnector);
+        this.participanteService = participanteService;
+        MongoDatabase database = mongoDBConnector.getDatabase("projetos");
+        this.collection = database.getCollection("projetos");
     }
 
+
+
     public List<Projeto> listarProjetos() {
+        List<Projeto> projetos = new ArrayList<>();
+        for (Document doc : collection.find()) {
+            projetos.add(documentToProjeto(doc));
+        }
         return projetos;
     }
 
-    public Optional<Projeto> buscarProjetoPorId(Long id) {
-        return projetos.stream().filter(projeto -> projeto.getId().equals(id)).findFirst();
+    public Optional<Projeto> buscarProjetoPorId(String id) {
+        Document doc = collection.find(eq("_id", new ObjectId(id))).first();
+        return Optional.ofNullable(doc).map(this::documentToProjeto);
     }
 
     public void adicionarProjeto(Projeto projeto) {
-        projeto.setId(ultimoId++);
-        projetos.add(projeto);
+        Document doc = projetoToDocument(projeto);
+        collection.insertOne(doc);
+        projeto.setId(doc.getObjectId("_id").toString());
     }
 
     public void atualizarProjeto(Projeto projetoAtualizado) {
-        projetos.replaceAll(projeto -> projeto.getId().equals(projetoAtualizado.getId()) ? projetoAtualizado : projeto);
+        Document doc = projetoToDocument(projetoAtualizado);
+        collection.replaceOne(eq("_id", new ObjectId(projetoAtualizado.getId())), doc);
     }
 
-    public void removerProjeto(Long id) {
-        projetos.removeIf(projeto -> projeto.getId().equals(id));
+    public void removerProjeto(String id) {
+        collection.deleteOne(eq("_id", new ObjectId(id)));
+    }
+
+    public Projeto documentToProjeto(Document doc) {
+        Projeto projeto = new Projeto();
+        projeto.setId(doc.getObjectId("_id").toString());
+        projeto.setNome(doc.getString("nome"));
+        projeto.setDescricao(doc.getString("descricao"));
+        projeto.setDataInicio(doc.getDate("dataInicio").toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+        projeto.setDataEncerramento(doc.getDate("dataEncerramento").toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+
+        ObjectId coordenadorId = doc.getObjectId("coordenador");
+        if(coordenadorId == null) {
+            logger.warn("Projeto '{}' não possui coordenador", projeto.getNome());
+        }
+        if (coordenadorId != null) {
+            Participante coordenador = participanteService.buscarParticipantePorId(coordenadorId.toString())
+                    .orElse(null);
+            projeto.setCoordenador(coordenador);
+        }
+
+        return projeto;
+    }
+
+    public Document projetoToDocument(Projeto projeto) {
+        Document doc = new Document();
+        if (projeto.getId() != null) {
+            doc.put("_id", new ObjectId(projeto.getId()));
+        }
+        doc.put("nome", projeto.getNome());
+        doc.put("descricao", projeto.getDescricao());
+        doc.put("dataInicio", java.util.Date.from(projeto.getDataInicio().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()));
+        doc.put("dataEncerramento", java.util.Date.from(projeto.getDataEncerramento().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()));
+
+        if (projeto.getCoordenador() != null) {
+            doc.put("coordenador", new ObjectId(String.valueOf(projeto.getCoordenador().getId())));
+        }
+
+        return doc;
     }
 }

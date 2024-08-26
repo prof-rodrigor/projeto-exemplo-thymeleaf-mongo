@@ -11,6 +11,11 @@ public class LoginController {
     private final Usuario usuarioExemplo = new Usuario("admin", "Administrador", "admin");
 
     public void mostrarPaginaLogin(Context ctx) {
+        String teste = ctx.queryParam("teste");
+        if(teste != null){
+            throw new RuntimeException("Erro de teste a partir do /login?teste=1");
+        }
+
         ctx.render("login.html");
     }
 
