@@ -11,7 +11,7 @@ Projeto de Sistemas e Projeto de Sistemas Orientados a Objetos dos cursos de
 Sistemas de Informação e Lic. em Ciência da Computação da UFPB, campus IV em 
 Rio Tinto.
 
-Este projeto foi desenvolvido para servir como base para a implementação do 
+🚨 Atenção: Este projeto foi desenvolvido para servir como base para a implementação do 
 projeto da disciplina. Ele é incompleto e possui vários pontos de melhoria 
 propositais, que serão discutidos em sala de aula. Deste modo, não considere 
 cegamente este projeto como uma referência para boas práticas de programação 
