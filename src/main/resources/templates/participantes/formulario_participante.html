@@ -25,12 +25,9 @@
             <input type="text" class="form-control" id="telefone" name="telefone" required>
         </div>
         <div class="mb-3">
-            <label for="categoriaParticipante" class="form-label">Categoria</label>
-            <select class="form-select" id="categoriaParticipante" name="categoriaParticipante" required>
-                <option value="ALUNO">Aluno</option>
-                <option value="PROFESSOR">Professor</option>
-                <option value="TECNICO_ADMINISTRATIVO">Técnico Administrativo</option>
-                <option value="OUTRO">Outro</option>
+            <label for="categoria" class="form-label">Categoria</label>
+            <select class="form-select" id="categoria" name="categoria" required>
+                <option th:each="categoria : ${categorias}" th:value="${categoria.name()}" th:text="${categoria.toString()}"></option>
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Salvar</button>

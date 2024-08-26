@@ -1,7 +1,7 @@
 package br.ufpb.dcx.rodrigor.projetos.projeto.services;
 
-import br.ufpb.dcx.rodrigor.meu_projeto.AbstractService;
-import br.ufpb.dcx.rodrigor.meu_projeto.db.MongoDBConnector;
+import br.ufpb.dcx.rodrigor.projetos.AbstractService;
+import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.Participante;
 import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
 import br.ufpb.dcx.rodrigor.projetos.projeto.model.Projeto;

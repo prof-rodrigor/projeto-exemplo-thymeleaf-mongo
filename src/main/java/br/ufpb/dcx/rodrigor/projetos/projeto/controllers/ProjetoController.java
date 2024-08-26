@@ -1,6 +1,6 @@
 package br.ufpb.dcx.rodrigor.projetos.projeto.controllers;
 
-import br.ufpb.dcx.rodrigor.meu_projeto.Keys;
+import br.ufpb.dcx.rodrigor.projetos.Keys;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.CategoriaParticipante;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.Participante;
 import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;

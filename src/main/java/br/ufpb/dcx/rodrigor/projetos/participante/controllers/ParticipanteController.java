@@ -1,6 +1,6 @@
 package br.ufpb.dcx.rodrigor.projetos.participante.controllers;
 
-import br.ufpb.dcx.rodrigor.meu_projeto.Keys;
+import br.ufpb.dcx.rodrigor.projetos.Keys;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.CategoriaParticipante;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.Participante;
 import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
@@ -19,6 +19,7 @@ public class ParticipanteController {
     }
 
     public void mostrarFormularioCadastro(Context ctx) {
+        ctx.attribute("categorias", CategoriaParticipante.values());
         ctx.render("/participantes/formulario_participante.html");
     }
 
@@ -29,6 +30,8 @@ public class ParticipanteController {
         participante.setSobrenome(ctx.formParam("sobrenome"));
         participante.setEmail(ctx.formParam("email"));
         participante.setTelefone(ctx.formParam("telefone"));
+        System.out.println("categoria recebida:"+ctx.formParam("categoria"));
+        System.out.println("categoria convertida:"+CategoriaParticipante.valueOf(ctx.formParam("categoria")));
         participante.setCategoria(CategoriaParticipante.valueOf(ctx.formParam("categoria")));
 
         participanteService.adicionarParticipante(participante);

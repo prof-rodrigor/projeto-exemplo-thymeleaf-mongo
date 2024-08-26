@@ -1,7 +1,7 @@
 package br.ufpb.dcx.rodrigor.projetos.participante.services;
 
-import br.ufpb.dcx.rodrigor.meu_projeto.AbstractService;
-import br.ufpb.dcx.rodrigor.meu_projeto.db.MongoDBConnector;
+import br.ufpb.dcx.rodrigor.projetos.AbstractService;
+import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.CategoriaParticipante;
 import br.ufpb.dcx.rodrigor.projetos.participante.model.Participante;
 import com.mongodb.client.MongoCollection;
@@ -9,7 +9,6 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
