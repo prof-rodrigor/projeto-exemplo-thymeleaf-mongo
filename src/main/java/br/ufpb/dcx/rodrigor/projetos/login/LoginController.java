@@ -1,14 +1,13 @@
 package br.ufpb.dcx.rodrigor.projetos.login;
 
+import br.ufpb.dcx.rodrigor.projetos.Keys;
 import io.javalin.http.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginController {
     private static final Logger logger = LogManager.getLogger(LoginController.class);
-
-    // Usuário de exemplo para autenticação
-    private final Usuario usuarioExemplo = new Usuario("admin", "Administrador", "admin");
 
     public void mostrarPaginaLogin(Context ctx) {
         String teste = ctx.queryParam("teste");
@@ -23,8 +22,11 @@ public class LoginController {
         String login = ctx.formParam("login");
         String senha = ctx.formParam("senha");
 
-        if (usuarioExemplo.getLogin().equals(login) && usuarioExemplo.getSenha().equals(senha)) {
-            ctx.sessionAttribute("usuario", usuarioExemplo);
+
+        UsuarioService usuarioService = ctx.appData(Keys.USUARIO_SERVICE.key());
+        Usuario usuario = usuarioService.buscarUsuarioPorLogin(login);
+        if (usuario != null && BCrypt.checkpw(senha, usuario.getSenha())) {
+            ctx.sessionAttribute("usuario", usuario);
             logger.info("Usuário '{}' autenticado com sucesso.", login);
             ctx.redirect("/area-interna");
         } else {

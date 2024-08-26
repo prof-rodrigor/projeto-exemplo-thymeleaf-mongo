@@ -2,6 +2,8 @@ package br.ufpb.dcx.rodrigor.projetos;
 
 import br.ufpb.dcx.rodrigor.projetos.db.MongoDBRepository;
 import br.ufpb.dcx.rodrigor.projetos.login.LoginController;
+import br.ufpb.dcx.rodrigor.projetos.login.UsuarioController;
+import br.ufpb.dcx.rodrigor.projetos.login.UsuarioService;
 import br.ufpb.dcx.rodrigor.projetos.participante.controllers.ParticipanteController;
 import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
 import br.ufpb.dcx.rodrigor.projetos.projeto.controllers.ProjetoController;
@@ -94,7 +96,47 @@ public class App {
         ParticipanteService participanteService = new ParticipanteService(mongoDBRepository);
         config.appData(Keys.PROJETO_SERVICE.key(), new ProjetoService(mongoDBRepository, participanteService));
         config.appData(Keys.PARTICIPANTE_SERVICE.key(), participanteService);
+        config.appData(Keys.USUARIO_SERVICE.key(), new UsuarioService(mongoDBRepository));
     }
+
+
+    private void configurarRotas(Javalin app) {
+        LoginController loginController = new LoginController();
+        app.get("/", ctx -> ctx.redirect("/login"));
+        app.get("/login", loginController::mostrarPaginaLogin);
+        app.post("/login", loginController::processarLogin);
+        app.get("/logout", loginController::logout);
+
+        app.get("/area-interna", ctx -> {
+            if (ctx.sessionAttribute("usuario") == null) {
+                ctx.redirect("/login");
+            } else {
+                ctx.render("area_interna.html");
+            }
+        });
+
+        ProjetoController projetoController = new ProjetoController();
+        app.get("/projetos", projetoController::listarProjetos);
+        app.get("/projetos/novo", projetoController::mostrarFormulario);
+        app.post("/projetos", projetoController::adicionarProjeto);
+        app.get("/projetos/{id}/remover", projetoController::removerProjeto);
+
+        ParticipanteController participanteController = new ParticipanteController();
+        app.get("/participantes", participanteController::listarParticipantes);
+        app.get("/participantes/novo", participanteController::mostrarFormularioCadastro);
+        app.post("/participantes", participanteController::adicionarParticipante);
+        app.get("/participantes/{id}/remover", participanteController::removerParticipante);
+
+
+        // Rotas para o controlador de usuário
+        UsuarioController usuarioController = new UsuarioController();
+        app.get("/usuarios", usuarioController::listarUsuarios);
+        app.get("/usuarios/novo", usuarioController::mostrarFormularioCadastro);
+        app.post("/usuarios/cadastrar", usuarioController::cadastrarUsuario);
+        app.get("/usuarios/{id}/remover", usuarioController::removerUsuario);
+
+    }
+
 
 
     private int obterPortaServidor() {
@@ -141,35 +183,6 @@ public class App {
             System.exit(1);
         }
         return db;
-    }
-
-    private void configurarRotas(Javalin app) {
-        LoginController loginController = new LoginController();
-        app.get("/", ctx -> ctx.redirect("/login"));
-        app.get("/login", loginController::mostrarPaginaLogin);
-        app.post("/login", loginController::processarLogin);
-        app.get("/logout", loginController::logout);
-
-        app.get("/area-interna", ctx -> {
-            if (ctx.sessionAttribute("usuario") == null) {
-                ctx.redirect("/login");
-            } else {
-                ctx.render("area_interna.html");
-            }
-        });
-
-        ProjetoController projetoController = new ProjetoController();
-        app.get("/projetos", projetoController::listarProjetos);
-        app.get("/projetos/novo", projetoController::mostrarFormulario);
-        app.post("/projetos", projetoController::adicionarProjeto);
-        app.get("/projetos/{id}/remover", projetoController::removerProjeto);
-
-        ParticipanteController participanteController = new ParticipanteController();
-        app.get("/participantes", participanteController::listarParticipantes);
-        app.get("/participantes/novo", participanteController::mostrarFormularioCadastro);
-        app.post("/participantes", participanteController::adicionarParticipante);
-        app.get("/participantes/{id}/remover", participanteController::removerParticipante);
-
     }
 
     private Properties carregarPropriedades() {
