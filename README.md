@@ -21,41 +21,56 @@ design que serão discutidos em sala de aula.
 Trata-se de um projeto de controle de Projetos, onde, por enquanto é 
 possível cadastrar projetos e participantes.
 
-## Principais funcionalidades do sistema
+## Arquitetura do Projeto
 
-### Gerenciamento de Projetos
-- **Listar Projetos**: Exibe uma lista de todos os projetos cadastrados.
-- **Adicionar Projeto**: Permite a criação de um novo projeto, incluindo informações como nome, descrição, datas de início e encerramento, e coordenador.
-- **Remover Projeto**: Permite a remoção de um projeto existente.
-- **Atualizar Projeto**: Permite a atualização das informações de um projeto existente.
+A arquitetura do nosso sistema segue uma arquitetura típica de aplicações 
+web - MVC(Model-View-Controller). Neste projeto utilizamos as seguintes 
+tecnologias: com algumas tecnologias específicas.
 
-### Gerenciamento de Participantes
-- **Listar Participantes**: Exibe uma lista de todos os participantes cadastrados.
-- **Adicionar Participante**: Permite a criação de um novo participante, incluindo informações como nome, sobrenome, email, telefone e categoria.
-- **Remover Participante**: Permite a remoção de um participante existente.
+- Tecnologias Utilizadas:
+  - **Javalin**: Framework web leve para Java. (https://javalin.io/)
+  - **Thymeleaf**: Motor de templates para renderização de páginas HTML. 
+    (https://www.thymeleaf.org/)
+  - **MongoDB**: Banco de dados NoSQL orientado a documentos. (https://www.mongodb.com/)
+  - **Bootstrap**: Também estamos usando o Bootstrap para o estilo das páginas 
+    HTML. (https://getbootstrap.com/)
 
-## Arquitetura da Solução
+![arquitetura.png](arquitetura.png)
 
-### Camada de Controle
-- **ProjetoController**: Controla as operações relacionadas aos projetos, como listar, adicionar, remover e atualizar projetos.
-- **ParticipanteController**: Controla as operações relacionadas aos participantes, como listar, adicionar e remover participantes.
+Descrição dos elementos da arquitetura:
 
-### Camada de Serviço
-- **ProjetoService**: Contém a lógica de negócios para gerenciar projetos, incluindo a conversão entre objetos `Projeto` e documentos do MongoDB.
-- **ParticipanteService**: Contém a lógica de negócios para gerenciar participantes.
+1. **Usuário/Navegador**:
+   - Representa o usuário que interage com a aplicação por meio de um navegador web.
+   - O navegador envia solicitações HTTP (URLs/endpoints) para a aplicação e recebe respostas (HTML, CSS, JS) para renderização.
 
-### Camada de Modelo
-- **Projeto**: Representa a entidade de um projeto, incluindo atributos como nome, descrição, datas de início e encerramento, e coordenador.
-- **Participante**: Representa a entidade de um participante, incluindo atributos como nome, sobrenome, email, telefone e categoria.
+2. **Controller (Controlador)**:
+   - É implementado utilizando **Javalin**, um framework leve para desenvolvimento de aplicações web em Java.
+   - O controlador recebe as requisições HTTP do navegador e decide qual serviço chamar para processar a lógica de negócio.
+   - Depois de processada, a resposta é enviada para a camada de visualização (View) ou diretamente de volta ao navegador.
 
-### Persistência de Dados
-- **MongoDB**: Utilizado para armazenar os dados dos projetos e participantes. A conexão e operações com o banco de dados são gerenciadas pelo `MongoDBConnector`.
+3. **View (Visão)**:
+   - Utiliza **Thymeleaf**, um motor de templates em Java para renderizar páginas HTML.
+   - Os controladores passam os dados necessários para a View, que gera o HTML dinâmico, que é então enviado de volta ao navegador.
+   - Além de HTML, pode incluir CSS e JS para formar a interface do usuário.
 
-### Templates
-- **Thymeleaf**: Utilizado para renderizar as páginas HTML, como a lista de projetos e o formulário de cadastro de participantes.
+4. **Model (Modelo)**:
+   - Representa os dados e a lógica de negócio da aplicação.
+   - Os serviços utilizam o modelo para manipular dados, que podem ser recebidos ou enviados para o repositório.
 
-### Configuração
-- **application.properties**: Arquivo de configuração onde são definidas as propriedades do banco de dados, como a string de conexão do MongoDB.
+5. **Services (Serviços)**:
+   - Contêm a lógica de negócio da aplicação.
+   - Eles manipulam o modelo e coordenam as interações entre o controlador e o repositório.
+
+6. **Repository (Repositório)**:
+   - Responsável pela persistência dos dados.
+   - Neste diagrama, está conectado a um banco de dados **MongoDB**.
+   - O repositório abstrai as operações de banco de dados, permitindo que os serviços manipulem dados sem precisar conhecer os detalhes de implementação do armazenamento.
+
+### Fluxo Geral:
+- O usuário interage com o navegador, que envia uma requisição HTTP ao controlador via uma URL ou endpoint específico.
+- O controlador, implementado em Javalin, processa a requisição chamando os serviços necessários.
+- Os serviços acessam e manipulam os dados através do repositório, que persiste essas informações no MongoDB.
+- O controlador então decide se a resposta será um HTML gerado pelo Thymeleaf (caso de uma página web) ou se deve enviar uma resposta diretamente ao navegador.
 
 ## Configuração do Projeto
 
@@ -65,3 +80,7 @@ possível cadastrar projetos e participantes.
     ```
 2. Edite o arquivo `application.properties` e insira a string de conexão do 
    seu banco de dados MongoDB: `mongodb.connectionString=<sua_string_de_conexão>`
+3. Execute a aplicação a partir da classe `App`:
+   ```bash
+   mvn clean compile exec:java
+   ```
