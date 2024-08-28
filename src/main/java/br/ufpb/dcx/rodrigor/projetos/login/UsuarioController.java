@@ -15,19 +15,34 @@ public class UsuarioController {
         ctx.render("/login/formulario_usuario.html");
     }
 
+
+    public void mostrarFormulario_signup(Context ctx) {
+        ctx.render("/login/formulario_signup.html");
+    }
+
     public void cadastrarUsuario(Context ctx) {
         UsuarioService usuarioService = ctx.appData(Keys.USUARIO_SERVICE.key());
         String nome = ctx.formParam("nome");
         String email = ctx.formParam("login");
         String senha = ctx.formParam("senha");
+
+        boolean signup = (ctx.formParam("signup") != null);
+        String formSignup = "/login/formulario_signup.html";
+        String formCadastro = "/login/formulario_usuario.html";
+
         if(usuarioService.buscarUsuarioPorLogin(email) != null){
-            ctx.attribute("erro", "Já existe um usuário com o email cadastrado: login");
-            ctx.render("/login/formulario_usuario.html");
+            ctx.attribute("erro", "Já existe um usuário com o email cadastrado:"+email);
+            ctx.render(signup?formSignup:formCadastro);
             return;
         }
 
         usuarioService.cadastrarUsuario(new Usuario(null, email, nome, senha));
-        ctx.redirect("/usuarios");
+        if(signup){
+            ctx.attribute("info", "Usuário cadastrado com sucesso!");
+            ctx.render("/login/login.html");
+        }else{
+            ctx.redirect("/usuarios");
+        }
     }
 
     public void listarUsuarios(Context ctx) {

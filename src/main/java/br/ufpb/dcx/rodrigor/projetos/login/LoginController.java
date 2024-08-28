@@ -15,7 +15,7 @@ public class LoginController {
             throw new RuntimeException("Erro de teste a partir do /login?teste=1");
         }
 
-        ctx.render("login.html");
+        ctx.render("/login/login.html");
     }
 
     public void processarLogin(Context ctx) {
@@ -31,7 +31,8 @@ public class LoginController {
             ctx.redirect("/area-interna");
         } else {
             logger.warn("Tentativa de login falhou para o usuário: {}", login);
-            ctx.redirect("/login");
+            ctx.attribute("erro", "Usuário ou senha inválidos");
+            ctx.render("/login/login.html");
         }
     }
 
