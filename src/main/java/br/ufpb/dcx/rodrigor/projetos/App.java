@@ -93,7 +93,7 @@ public class App {
     }
 
     private void registrarServicos(JavalinConfig config, MongoDBRepository mongoDBRepository) {
-        ParticipanteService participanteService = new ParticipanteService(mongoDBRepository);
+        ParticipanteService participanteService = new ParticipanteService("http://localhost:8001");
         config.appData(Keys.PROJETO_SERVICE.key(), new ProjetoService(mongoDBRepository, participanteService));
         config.appData(Keys.PARTICIPANTE_SERVICE.key(), participanteService);
         config.appData(Keys.USUARIO_SERVICE.key(), new UsuarioService(mongoDBRepository));
@@ -123,9 +123,6 @@ public class App {
 
         ParticipanteController participanteController = new ParticipanteController();
         app.get("/participantes", participanteController::listarParticipantes);
-        app.get("/participantes/novo", participanteController::mostrarFormularioCadastro);
-        app.post("/participantes", participanteController::adicionarParticipante);
-        app.get("/participantes/{id}/remover", participanteController::removerParticipante);
 
 
         // Rotas para o controlador de usuário

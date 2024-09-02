@@ -70,16 +70,12 @@ public class ProjetoService extends AbstractService {
         projeto.setDataInicio(doc.getDate("dataInicio").toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
         projeto.setDataEncerramento(doc.getDate("dataEncerramento").toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
 
-        ObjectId coordenadorId = doc.getObjectId("coordenador");
-        if(coordenadorId == null) {
-            logger.warn("Projeto '{}' não possui coordenador", projeto.getNome());
+        Optional<String> coordenadorId = Optional.ofNullable(doc.getObjectId("coordenador"))
+                .map(ObjectId::toString);
+        if(coordenadorId.isPresent()){
+            Optional<Participante> coordenador = participanteService.buscarParticipantePorId(coordenadorId.get());
+            coordenador.ifPresent(projeto::setCoordenador);
         }
-        if (coordenadorId != null) {
-            Participante coordenador = participanteService.buscarParticipantePorId(coordenadorId.toString())
-                    .orElse(null);
-            projeto.setCoordenador(coordenador);
-        }
-
         return projeto;
     }
 

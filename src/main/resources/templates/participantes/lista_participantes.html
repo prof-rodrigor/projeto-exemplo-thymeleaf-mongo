@@ -16,7 +16,6 @@
             <th>Email</th>
             <th>Telefone</th>
             <th>Categoria</th>
-            <th>Ações</th>
         </tr>
         </thead>
         <tbody>
@@ -27,21 +26,11 @@
                 <td th:text="${participante.email}">Email</td>
                 <td th:text="${participante.telefone}">Telefone</td>
                 <td th:text="${participante.categoria}">Categoria</td>
-                <td>
-                    <button class="btn btn-danger btn-sm" th:data-id="${participante.id}" onclick="removerParticipante(this)">
-                        Remover
-                    </button>
-                </td>
             </tr>
         </th:block>
         </tbody>
     </table>
-    <script>
-        function removerParticipante(button) {
-            const id = button.getAttribute('data-id');
-            window.location.href = `/participantes/${id}/remover`;
-        }
-    </script>
+
 </section>
 
 

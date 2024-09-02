@@ -1,9 +1,10 @@
 package br.ufpb.dcx.rodrigor.projetos.participante.model;
 
-import org.bson.types.ObjectId;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Participante {
-    private ObjectId id;
+    private String id;
     private String nome;
     private String sobrenome;
     private String email;
@@ -12,11 +13,11 @@ public class Participante {
 
     // Getters and Setters
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
