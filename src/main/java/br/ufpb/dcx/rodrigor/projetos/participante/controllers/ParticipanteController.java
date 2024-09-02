@@ -36,4 +36,23 @@ public class ParticipanteController {
     }
 
 
+    public void adicionarParticipante(Context ctx) {
+        ParticipanteService participanteService = ctx.appData(Keys.PARTICIPANTE_SERVICE.key());
+        Participante participante = new Participante();
+        participante.setNome(ctx.formParam("nome"));
+        participante.setSobrenome(ctx.formParam("sobrenome"));
+        participante.setEmail(ctx.formParam("email"));
+        participante.setTelefone(ctx.formParam("telefone"));
+        participante.setCategoria(CategoriaParticipante.valueOf(ctx.formParam("categoria")));
+
+        participanteService.adicionarParticipante(participante);
+        ctx.redirect("/participantes");
+    }
+
+    public void removerParticipante(Context ctx) {
+        ParticipanteService participanteService = ctx.appData(Keys.PARTICIPANTE_SERVICE.key());
+        String id = ctx.pathParam("id");
+        participanteService.removerParticipante(id);
+        ctx.redirect("/participantes");
+    }
 }
