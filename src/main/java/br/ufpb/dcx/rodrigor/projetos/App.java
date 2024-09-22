@@ -1,6 +1,8 @@
 package br.ufpb.dcx.rodrigor.projetos;
 
 import br.ufpb.dcx.rodrigor.projetos.db.MongoDBRepository;
+import br.ufpb.dcx.rodrigor.projetos.form.controller.FormController;
+import br.ufpb.dcx.rodrigor.projetos.form.services.FormService;
 import br.ufpb.dcx.rodrigor.projetos.login.LoginController;
 import br.ufpb.dcx.rodrigor.projetos.login.UsuarioController;
 import br.ufpb.dcx.rodrigor.projetos.login.UsuarioService;
@@ -97,6 +99,7 @@ public class App {
         config.appData(Keys.PROJETO_SERVICE.key(), new ProjetoService(mongoDBRepository, participanteService));
         config.appData(Keys.PARTICIPANTE_SERVICE.key(), participanteService);
         config.appData(Keys.USUARIO_SERVICE.key(), new UsuarioService(mongoDBRepository));
+        config.appData(Keys.FORM_SERVICE.key(), new FormService());
     }
 
 
@@ -132,6 +135,11 @@ public class App {
         app.post("/usuarios/cadastrar", usuarioController::cadastrarUsuario);
         app.get("/usuarios/signup", usuarioController::mostrarFormulario_signup);
         app.get("/usuarios/{id}/remover", usuarioController::removerUsuario);
+
+        // Rotas para o controlador de formulários
+        FormController formController = new FormController();
+        app.get("/form/{formId}", formController::abrirFormulario);
+        app.post("/form/{formId}", formController::validarFormulario);
 
     }
 

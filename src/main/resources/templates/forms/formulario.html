@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/flatly/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${form.nome}">Título Form</h1>
+    <form th:action="@{/form/{formId}(formId=${form.id})}" method="post">
+        <div th:each="campo : ${form.campos}">
+            <div class="form-group">
+                <label th:for="${campo.id}" th:text="${campo.label}">Campo</label>
+                <input type="text" class="form-control" th:id="${campo.id}" th:name="${campo.id}" th:value="${campo.valor}">
+                <div class="text-danger" th:if="${erros != null and erros[campo.id] != null}" th:text="${erros[campo.id].mensagem}">Erro</div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+</div>
+</body>
+</html>

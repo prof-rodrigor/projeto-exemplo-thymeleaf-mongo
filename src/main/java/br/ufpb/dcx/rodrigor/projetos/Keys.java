@@ -10,6 +10,7 @@ public enum Keys {
     MONGO_DB(new Key<MongoDBRepository>("mongo-db")),
     PROJETO_SERVICE(new Key<ProjetoService>("projeto-service")),
     PARTICIPANTE_SERVICE(new Key<ParticipanteService>("participante-service")),
+    FORM_SERVICE(new Key<ParticipanteService>("form-service")),
     USUARIO_SERVICE(new Key<UsuarioService>("usuario-service"))
     ;
 

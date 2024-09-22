@@ -45,14 +45,14 @@ public class ParticipanteController {
         participante.setTelefone(ctx.formParam("telefone"));
         participante.setCategoria(CategoriaParticipante.valueOf(ctx.formParam("categoria")));
 
-        participanteService.adicionarParticipante(participante);
+        //participanteService.adicionarParticipante(participante);
         ctx.redirect("/participantes");
     }
 
     public void removerParticipante(Context ctx) {
         ParticipanteService participanteService = ctx.appData(Keys.PARTICIPANTE_SERVICE.key());
         String id = ctx.pathParam("id");
-        participanteService.removerParticipante(id);
+        //participanteService.removerParticipante(id);
         ctx.redirect("/participantes");
     }
 }
