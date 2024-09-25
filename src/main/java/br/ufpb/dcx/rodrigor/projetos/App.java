@@ -99,7 +99,7 @@ public class App {
         config.appData(Keys.PROJETO_SERVICE.key(), new ProjetoService(mongoDBRepository, participanteService));
         config.appData(Keys.PARTICIPANTE_SERVICE.key(), participanteService);
         config.appData(Keys.USUARIO_SERVICE.key(), new UsuarioService(mongoDBRepository));
-        config.appData(Keys.FORM_SERVICE.key(), new FormService());
+        config.appData(Keys.FORM_SERVICE.key(), new FormService(mongoDBRepository);
     }
 
 

@@ -10,6 +10,8 @@ public class Formulario {
     private String nome;
     private final String id;
 
+    private PersistenciaFormulario persistencia;
+
     public Formulario( String id, String nome){
         this.nome = nome;
         this.id = id;
@@ -39,6 +41,10 @@ public class Formulario {
         this.nome = nome;
     }
 
+    public void setPersistencia(PersistenciaFormulario persistencia) {
+        this.persistencia = persistencia;
+    }
+
     @Override
     public String toString() {
         return "Formulario{" +
@@ -46,5 +52,12 @@ public class Formulario {
                 ", nome='" + nome + '\'' +
                 ", id='" + id + '\'' +
                 '}';
+    }
+
+    public void persistir() {
+        if(persistencia != null){
+            persistencia.persistir(this);
+        }
+
     }
 }
